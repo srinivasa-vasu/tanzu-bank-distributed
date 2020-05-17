@@ -106,4 +106,8 @@ spring:
     sampler.probability: 1
   zipkin:
     enabled: true
-        
+
+wavefront:
+  application:
+    service: gateway-service
+

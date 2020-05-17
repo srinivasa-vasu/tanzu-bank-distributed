@@ -11,3 +11,6 @@ pivotal:
     symbols:
       it: ORCL,VMW,INTC,AMD,HPQ,CSCO,AAPL
       fs: JPM,C,MS,BAC,GS,WFC,BK
+wavefront:
+  application:
+    service: web-service

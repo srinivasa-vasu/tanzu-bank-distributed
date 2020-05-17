@@ -1,3 +1,6 @@
 spring:
   application:
      name: analytics-service
+wavefront:
+  application:
+    service: analytics-service
