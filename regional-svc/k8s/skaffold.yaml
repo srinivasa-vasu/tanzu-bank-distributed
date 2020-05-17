@@ -1,0 +1,21 @@
+apiVersion: skaffold/v2beta1
+kind: Config
+build:
+  artifacts:
+    - image: config
+      context: ../config-service
+      buildpack:
+        builder: humourmind/paketo-java-builder-tiny:0.7.3
+        # forcePull: false
+    - image: gateway
+      context: ../gateway-service
+      buildpack:
+        builder: humourmind/paketo-java-builder-tiny:0.7.3
+        # forcePull: false
+  tagPolicy:
+    envTemplate:
+      template: 'harbor.sys.humourmind.com/tanzumc/{{.IMAGE_NAME}}-rsvc:1.0'
+  local:
+    push: true
+deploy:
+  kustomize: {}

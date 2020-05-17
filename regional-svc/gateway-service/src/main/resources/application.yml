@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: regional-gateway-service
+  cloud:
+    discovery:
+      enabled: true
+      blocking:
+        enabled: false
+    gateway:
+      enabled: true
+      discovery:
+        locator:
+          enabled: true
+      routes:
+      - id: config-service
+        uri: http://config-service
+        predicates:
+        - Path=/**
+  sleuth:
+    enabled: true
+    sampler.probability: 1
+  zipkin:
+    enabled: true

@@ -1,0 +1,9 @@
+spring:
+  application:
+     name: quotes-service
+pivotal:
+  quotes:
+    quote_url: https://sandbox.iexapis.com/stable/stock/{symbol}/quote?token={apiToken}
+    quotes_url: https://sandbox.iexapis.com/stable/stock/market/batch?symbols={symbols}&types=quote&token={apiToken}
+    companies_url: http://dev.markitondemand.com/Api/v2/Lookup/json?input={name}
+

@@ -1,0 +1,7 @@
+spring:
+  zipkin:
+    baseUrl: http://wavefront-proxy.wavefront:9411/
+    sender:
+      type: web
+pivotal:
+  downstream-protocol: http
