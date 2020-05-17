@@ -25,9 +25,12 @@ spring:
         predicates:
         - Path=/accounts/**
         filters:
+        - name: FallbackPath
+          args:
+            retain: true
         - name: CircuitBreaker
           args:
-            name: reg-fallback
+            name: svc-fallback
             fallbackUri: forward:/fallback
         #filters:
         #- RewritePath=/accounts/(?<path>.*), /$\{path}
@@ -35,20 +38,44 @@ spring:
         uri: http://user-service
         predicates:
         - Path=/users/**
+        filters:
+        - name: FallbackPath
+          args:
+            retain: true
+        - name: CircuitBreaker
+          args:
+            name: svc-fallback
+            fallbackUri: forward:/fallback
         #filters:
         #- RewritePath=/user/(?<path>.*), /$\{path}
       - id: user-service-login
         uri: http://user-service
         predicates:
         - Path=/login/**
+        filters:
+        - name: FallbackPath
+          args:
+            retain: true
+        - name: CircuitBreaker
+          args:
+            name: svc-fallback
+            fallbackUri: forward:/fallback
       - id: user-service-logout
         uri: http://user-service
         predicates:
         - Path=/logout/**
+        filters:
+        - name: FallbackPath
+          args:
+            retain: true
       - id: portfolio-service
         uri: http://portfolio-service
         predicates:
         - Path=/portfolio/**
+        filters:
+        - name: FallbackPath
+          args:
+            retain: true
         #filters:
         #- RewritePath=/portfolio/(?<path>.*), /$\{path}
       - id: analytics-service
@@ -57,10 +84,15 @@ spring:
         - Path=/analytics/**
         #filters:
         #- RewritePath=/analytics/(?<path>.*), /$\{path}
-      - id: reg-fallback
+      - id: svc-fallback
         uri: http://crossplane-service
         predicates:
           - Path=/fallback
+        filters:
+        - name: FallbackPath
+          args:
+            pathSuffix: true
+        - StripPrefix=1
   sleuth:
     enabled: true
     sampler.probability: 1
