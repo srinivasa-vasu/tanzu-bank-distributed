@@ -30,3 +30,4 @@ secret.yaml
 secret.yml
 domain-patch.yaml
 .vscode
+*config-props*

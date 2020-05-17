@@ -58,7 +58,7 @@ spring:
         #filters:
         #- RewritePath=/analytics/(?<path>.*), /$\{path}
       - id: reg-fallback
-        uri: http://10.195.9.50:32000
+        uri: http://crossplane-service
         predicates:
           - Path=/fallback
   sleuth:
