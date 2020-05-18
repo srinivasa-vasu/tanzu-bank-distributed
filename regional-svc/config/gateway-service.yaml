@@ -27,7 +27,7 @@ spring:
         filters:
         - name: FallbackPath
           args:
-            retain: true
+            retainRequestPath: true
         - name: CircuitBreaker
           args:
             name: svc-fallback
@@ -41,7 +41,7 @@ spring:
         filters:
         - name: FallbackPath
           args:
-            retain: true
+            retainRequestPath: true
         - name: CircuitBreaker
           args:
             name: svc-fallback
@@ -55,7 +55,7 @@ spring:
         filters:
         - name: FallbackPath
           args:
-            retain: true
+            retainRequestPath: true
         - name: CircuitBreaker
           args:
             name: svc-fallback
@@ -67,7 +67,7 @@ spring:
         filters:
         - name: FallbackPath
           args:
-            retain: true
+            retainRequestPath: true
         - name: CircuitBreaker
           args:
             name: svc-fallback
@@ -79,7 +79,7 @@ spring:
         filters:
         - name: FallbackPath
           args:
-            retain: true
+            retainRequestPath: true
         - name: CircuitBreaker
           args:
             name: svc-fallback
@@ -99,7 +99,7 @@ spring:
         filters:
         - name: FallbackPath
           args:
-            pathSuffix: true
+            suffixPath: true
         - StripPrefix=1
   sleuth:
     enabled: true
