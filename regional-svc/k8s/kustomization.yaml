@@ -1,4 +1,5 @@
 resources:
+- deploy/00-config-props.yaml
 - deploy/01-registry-secret.yaml
 - deploy/02-sa.yaml
 - deploy/02-sa-role.yaml

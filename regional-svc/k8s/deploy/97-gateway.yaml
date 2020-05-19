@@ -8,7 +8,7 @@ metadata:
     version: "1.0"
   name: "gateway"
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: "gateway"
@@ -22,31 +22,14 @@ spec:
         version: "1.0"
     spec:
       serviceAccountName: boot-sa
-      initContainers:
-      - name: init-config-check
-        image: busybox:latest
-        command:
-        - '/bin/sh'
-        - '-c'
-        - |
-          while true
-          do
-            rt=$(nc -z -w 1 config-service 80)
-            if [ $? -eq 0 ]; then
-              echo "Config service is UP"
-              break
-            fi
-            echo "Config service is not yet reachable;sleep for 5s before retry"
-            sleep 5
-          done      
       containers:
       - name: "gateway"
         lifecycle:
           preStop:
             exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
+              command: ["/bin/bash", "-c", "sleep 10"]
         envFrom:
-        - configMapRef: 
+        - configMapRef:
             name: config-props
         image: "harbor.sys.humourmind.com/tanzumc/gateway-rsvc:1.0"
         imagePullPolicy: "Always"
@@ -79,15 +62,17 @@ apiVersion: "v1"
 kind: "Service"
 metadata:
   labels:
-    app: "gateway-service"
+    app: "regional-gateway-service"
     version: "1.0"
-  name: "gateway-service"
+  name: "regional-gateway-service"
 spec:
   ports:
   - name: "web"
     port: 80
     targetPort: 8080
+    nodePort: 32000
   selector:
     app: "gateway"
     version: "1.0"
-  type: "ClusterIP"          
+  type: "LoadBalancer"
+  loadBalancerIP: 10.195.9.200

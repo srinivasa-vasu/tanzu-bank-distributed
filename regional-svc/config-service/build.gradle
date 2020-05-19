@@ -1,8 +1,14 @@
 plugins {
   id 'org.springframework.boot' version '2.3.0.RELEASE'
   id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-  id 'com.google.cloud.tools.jib' version '2.1.0'
+//  id 'com.google.cloud.tools.jib' version '2.1.0'
   id 'java'
+}
+//jib.to.image = 'harbor.sys.humourmind.com/tanzumc/config-rsvc:1.0'
+
+bootBuildImage {
+  imageName = "harbor.sys.humourmind.com/tanzumc/config-rsvc:1.0"
+  builder = "humourmind/paketo-java-builder-tiny:0.7.3"
 }
 
 apply plugin: 'eclipse'
@@ -25,18 +31,21 @@ repositories {
 
 ext {
   springCloudVersion = 'Hoxton.SR4'
+  wavefrontVersion = '2.0.0-RC1'
 }
 
 dependencies {
   implementation "org.springframework.cloud:spring-cloud-starter-config"
   implementation "org.springframework.cloud:spring-cloud-config-server"
   implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
-  implementation 'io.micrometer:micrometer-registry-wavefront'
+  //implementation 'io.micrometer:micrometer-registry-wavefront'
+  implementation 'com.wavefront:wavefront-spring-boot-starter'
   implementation "org.springframework.boot:spring-boot-starter-actuator"
 }
 
 dependencyManagement {
   imports {
     mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    mavenBom "com.wavefront:wavefront-spring-boot-bom:${wavefrontVersion}"
   }
 }

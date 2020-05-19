@@ -63,3 +63,4 @@ spec:
     - name: jdbc
       port: 3306
       nodePort: 31000
+#  loadBalancerIP: 10.195.9.198
