@@ -1,0 +1,97 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  labels:
+    app: "web"
+    kind: "k8s-native"
+    version: "1.0"
+  name: "web"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "web"
+      kind: "k8s-native"
+      version: "1.0"
+  template:
+    metadata:
+      annotations:
+        traffic.sidecar.istio.io/excludeOutboundIPRanges: 10.195.9.59/32
+      labels:
+        app: "web"
+        kind: "k8s-native"
+        version: "1.0"
+    spec:
+      serviceAccountName: boot-sa
+      initContainers:
+      - name: init-config-check
+        image: busybox:latest
+        command:
+        - '/bin/sh'
+        - '-c'
+        - |
+          while true
+          do
+            rt=$(nc -z -w 1 gateway-service 80)
+            if [ $? -eq 0 ]; then
+              echo "Gateway service is UP"
+              break
+            fi
+            echo "Gateway service is not yet reachable;sleep for 5s before retry"
+            sleep 5
+          done
+      containers:
+      - name: "web"
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/bash", "-c", "sleep 10"]
+        envFrom:
+        - configMapRef: 
+            name: config-props
+        image: "harbor.sys.humourmind.com/tanzumc/web:1.0"
+        imagePullPolicy: "Always"
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: "/actuator/health/readiness"
+            port: 8080
+            scheme: "HTTP"
+          initialDelaySeconds: 0
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: "/actuator/health/liveness"
+            port: 8080
+            scheme: "HTTP"
+          initialDelaySeconds: 0
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        ports:
+        - containerPort: 8080
+          name: "web"
+          protocol: "TCP"
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  labels:
+    app: "web-service"
+    version: "1.0"
+  name: "web-service"
+spec:
+  ports:
+  - name: "web"
+    port: 80
+    targetPort: 8080
+    nodePort: 32001
+  selector:
+    app: "web"
+    version: "1.0"
+  type: "LoadBalancer"
+  loadBalancerIP: 10.195.9.179

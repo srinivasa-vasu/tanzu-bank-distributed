@@ -1,0 +1,12 @@
+spring:
+  application:
+     name: accounts-service
+  cloud:
+    config:
+      uri: http://crossplane-service
+info:
+  build:
+    group: ${group}
+    name: ${name}
+    description: ${description}
+    version: ${version}

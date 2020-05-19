@@ -1,0 +1,64 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.0.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'com.google.cloud.tools.jib' version '2.1.0'
+	id 'java'
+}
+
+bootBuildImage {
+	imageName = "harbor.sys.humourmind.com/tanzumc/web:1.0"
+	builder = "humourmind/paketo-java-builder-tiny:0.7.3"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+
+description = "Web interface to the springboot set of services"
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+version = ""
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+ext {
+	springCloudVersion = 'Hoxton.SR4'
+	wavefrontVersion = '2.0.0-RC1'
+}
+
+dependencies {
+
+	implementation "org.springframework.boot:spring-boot-starter-web"
+	implementation "org.springframework.boot:spring-boot-starter-actuator"
+	implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+	implementation "org.springframework.boot:spring-boot-starter-security"
+	implementation "org.thymeleaf.extras:thymeleaf-extras-springsecurity5"
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
+//	implementation "org.springframework.cloud:spring-cloud-starter-zipkin"
+
+	implementation "org.springframework.cloud:spring-cloud-config-client"
+	implementation "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
+
+	implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+//	implementation 'io.micrometer:micrometer-registry-wavefront'
+	implementation 'com.wavefront:wavefront-spring-boot-starter'
+
+
+	testCompile "org.springframework.boot:spring-boot-starter-test"
+	testCompile "junit:junit"
+
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		mavenBom "com.wavefront:wavefront-spring-boot-bom:${wavefrontVersion}"
+	}
+}

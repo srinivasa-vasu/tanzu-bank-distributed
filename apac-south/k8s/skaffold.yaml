@@ -1,0 +1,39 @@
+apiVersion: skaffold/v2beta1
+kind: Config
+build:
+  artifacts:
+    - image: crossplane
+      context: ../crossplane-service
+      buildpack:
+        builder: humourmind/paketo-java-builder-tiny:0.7.3
+    - image: gateway
+      context: ../gateway-service
+      buildpack:
+        builder: humourmind/paketo-java-builder-tiny:0.7.3
+    - image: portfolio
+      context: ../portfolio-service
+      buildpack:
+        builder: humourmind/paketo-java-builder-tiny:0.7.3
+    - image: accounts
+      context: ../accounts-service
+      buildpack:
+        builder: humourmind/paketo-java-builder-tiny:0.7.3
+    - image: quotes
+      context: ../quotes-service
+      buildpack:
+        builder: humourmind/paketo-java-builder-tiny:0.7.3
+    - image: user
+      context: ../user-service
+      buildpack:
+        builder: humourmind/paketo-java-builder-tiny:0.7.3
+    - image: web
+      context: ../web-ui
+      buildpack:
+        builder: humourmind/paketo-java-builder-tiny:0.7.3
+  tagPolicy:
+    envTemplate:
+      template: 'harbor.sys.humourmind.com/tanzumc/{{.IMAGE_NAME}}:1.0'
+  local:
+    push: true
+deploy:
+  kustomize: {}

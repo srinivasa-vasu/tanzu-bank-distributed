@@ -1,0 +1,119 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  labels:
+    app: "user"
+    kind: "k8s-native"
+    version: "1.0"
+    rel: ds
+  name: "user"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "user"
+      kind: "k8s-native"
+      version: "1.0"
+      rel: ds
+  template:
+    metadata:
+      annotations:
+        traffic.sidecar.istio.io/excludeOutboundIPRanges: 10.195.9.59/32
+      labels:
+        app: "user"
+        kind: "k8s-native"
+        version: "1.0"
+        rel: ds
+    spec:
+      serviceAccountName: boot-sa
+      initContainers:
+      - name: init-ds-check
+        image: busybox:latest
+        envFrom:
+        - configMapRef: 
+            name: ds-props
+        command:
+        - '/bin/sh'
+        - '-c'
+        - |
+          while true
+          do
+            rt=$(nc -z -w 1 $host $port)
+            if [ $? -eq 0 ]; then
+              echo "DB is UP"
+              break
+            fi
+            echo "DB is not yet reachable;sleep for 5s before retry"
+            sleep 5
+          done   
+      - name: init-config-check
+        image: busybox:latest
+        command:
+        - '/bin/sh'
+        - '-c'
+        - |
+          while true
+          do
+            rt=$(nc -z -w 1 gateway-service 80)
+            if [ $? -eq 0 ]; then
+              echo "Gateway service is UP"
+              break
+            fi
+            echo "Gateway service is not yet reachable;sleep for 5s before retry"
+            sleep 5
+          done
+      containers:
+      - name: "user"
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/bash", "-c", "sleep 10"]
+        envFrom:
+        - configMapRef: 
+            name: config-props
+        - configMapRef: 
+            name: ds-props
+        image: "harbor.sys.humourmind.com/tanzumc/user:1.0"
+        imagePullPolicy: "Always"
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: "/actuator/health/readiness"
+            port: 8080
+            scheme: "HTTP"
+          initialDelaySeconds: 0
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: "/actuator/health/liveness"
+            port: 8080
+            scheme: "HTTP"
+          initialDelaySeconds: 0
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        ports:
+        - containerPort: 8080
+          name: "web"
+          protocol: "TCP"
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  labels:
+    app: "user-service"
+    version: "1.0"
+  name: "user-service"
+spec:
+  ports:
+  - name: "web"
+    port: 80
+    targetPort: 8080
+  selector:
+    app: "user"
+    version: "1.0"
+  type: "ClusterIP"          

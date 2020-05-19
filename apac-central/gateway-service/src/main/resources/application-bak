@@ -1,0 +1,49 @@
+#spring:
+#  application:
+#    name: gateway-service
+#  cloud:
+#    discovery:
+#      enabled: true
+#      blocking:
+#        enabled: false
+#    gateway:
+#      enabled: true
+#      discovery:
+#        locator:
+#          enabled: true
+#      routes:
+#        - id: reg-fallback
+#          uri: http://localhost:8080
+#          predicates:
+#            - Path=/fallback
+#          filters:
+##          - name: RequestHeaderToRequestUri
+##            args:
+##              - name: original_url
+##          - RemoveRequestParameter=name
+#          - name: FallbackPath
+#            args:
+#              pathSuffix: true
+#          - StripPrefix=1
+#        - id: any-request
+#          uri: http://account-service
+#          predicates:
+#            - Path=/accounts/**,/portfolio/**,/users/**
+##          filters:
+##            - CircuitBreaker=default
+##            - RewritePath=/accounts/(?<path>.*), /fallback/accounts/$\{path}
+#          filters:
+#          - name: FallbackPath
+#            args:
+#              retain: true
+#          - name: CircuitBreaker
+#            args:
+#              name: reg-fallback
+#              fallbackUri: forward:/fallback
+#  sleuth:
+#    enabled: true
+#    sampler.probability: 1
+#  zipkin:
+#    enabled: true
+#server:
+#  port: 8081
