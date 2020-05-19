@@ -111,3 +111,11 @@ wavefront:
   application:
     service: gateway-service
 
+logging:
+  level:
+    reactor:
+      netty: INFO
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE

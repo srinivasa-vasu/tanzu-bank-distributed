@@ -1,0 +1,3 @@
+resources:
+  - ../base
+  - 97-gateway-service.yaml

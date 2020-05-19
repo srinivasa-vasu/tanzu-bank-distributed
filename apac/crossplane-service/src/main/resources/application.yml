@@ -13,15 +13,11 @@ spring:
           enabled: true
       routes:
         - id: cb-fallback
-#          uri: http://as-gateway-service.bank.tanzu
-#          uri: http://10.195.9.50:32000 # fallback region gateway
-          uri: http://10.195.9.180:80
+          uri: ${CP_GW_EP}
           predicates:
             - Path=/accounts/**,/portfolio/**,/logout/**,/login/**,/users/**
         - id: any-request # regional-svc gateway
-#          uri: http://regional-gateway-service.bank.tanzu
-#          uri: http://10.195.9.59:32000
-          uri: http://10.195.9.200:80
+          uri: ${CP_RGW_EP}
           predicates:
             - Path=/**
   sleuth:
@@ -31,7 +27,7 @@ spring:
     enabled: true
 wavefront:
   application:
-    service: crossplane-ac-service
+    service: ${CP_NAME}
 
 
 #logging:
