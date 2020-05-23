@@ -28,11 +28,11 @@ spring:
         - name: FallbackPath
           args:
             retainRequestPath: true
-        - name: CircuitBreaker
+        - name: CustomCircuitBreaker
           args:
             name: svc-fallback
             fallbackUri: forward:/fallback
-        - name: ErrorCodeToException
+#        - name: ErrorCodeToException
       - id: user-service
         uri: ${USER_EP}
         predicates:
