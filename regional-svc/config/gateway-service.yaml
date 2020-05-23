@@ -11,31 +11,30 @@ spring:
           enabled: true
       routes:
       - id: quotes-service-curl
-        uri: http://quotes-service
+        uri: ${QUOTES_EP}
         predicates:
         - Path=/quotes/**
         filters:
         - RewritePath=/quotes/(?<path>.*), /$\{path}
       - id: quotes-service
-        uri: http://quotes-service
+        uri: ${QUOTES_EP}
         predicates:
         - Path=/v1/**
       - id: accounts-service
-        uri: http://accounts-service
+        uri: ${ACCOUNT_EP}
         predicates:
         - Path=/accounts/**
         filters:
         - name: FallbackPath
           args:
             retainRequestPath: true
+        - name: ErrorCodeToException
         - name: CircuitBreaker
           args:
             name: svc-fallback
             fallbackUri: forward:/fallback
-        #filters:
-        #- RewritePath=/accounts/(?<path>.*), /$\{path}
       - id: user-service
-        uri: http://user-service
+        uri: ${USER_EP}
         predicates:
         - Path=/users/**
         filters:
@@ -46,10 +45,8 @@ spring:
           args:
             name: svc-fallback
             fallbackUri: forward:/fallback
-        #filters:
-        #- RewritePath=/user/(?<path>.*), /$\{path}
       - id: user-service-login
-        uri: http://user-service
+        uri: ${USER_EP}
         predicates:
         - Path=/login/**
         filters:
@@ -61,7 +58,7 @@ spring:
             name: svc-fallback
             fallbackUri: forward:/fallback
       - id: user-service-logout
-        uri: http://user-service
+        uri: ${USER_EP}
         predicates:
         - Path=/logout/**
         filters:
@@ -73,7 +70,7 @@ spring:
             name: svc-fallback
             fallbackUri: forward:/fallback
       - id: portfolio-service
-        uri: http://portfolio-service
+        uri: ${PORTFOLIO_EP}
         predicates:
         - Path=/portfolio/**
         filters:
@@ -84,16 +81,14 @@ spring:
           args:
             name: svc-fallback
             fallbackUri: forward:/fallback
-        #filters:
-        #- RewritePath=/portfolio/(?<path>.*), /$\{path}
       - id: analytics-service
-        uri: http://analytics-service
+        uri: ${ANALYTICS_EP}
         predicates:
         - Path=/analytics/**
         #filters:
         #- RewritePath=/analytics/(?<path>.*), /$\{path}
       - id: svc-fallback
-        uri: http://crossplane-service
+        uri: ${CROSSPLANE_EP}
         predicates:
           - Path=/fallback
         filters:
