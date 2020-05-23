@@ -28,7 +28,7 @@ spring:
         - name: FallbackPath
           args:
             retainRequestPath: true
-        - name: CustomCircuitBreaker
+        - name: CircuitBreaker
           args:
             name: svc-fallback
             fallbackUri: forward:/fallback
