@@ -1,8 +1,2 @@
 resources:
-- 00-config-props.yaml
-- 01-registry-secret.yaml
-- 02-sa.yaml
-- 02-sa-role.yaml
-- 03-trader-db.yaml
-- 96-config.yaml
-- 97-gateway.yaml
+- nsm

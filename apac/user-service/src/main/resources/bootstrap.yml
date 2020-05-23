@@ -3,5 +3,5 @@ spring:
      name: user-service
   cloud:
     config:
-      uri: http://crossplane-service
+      uri: ${CROSSPLANE_EP}
 

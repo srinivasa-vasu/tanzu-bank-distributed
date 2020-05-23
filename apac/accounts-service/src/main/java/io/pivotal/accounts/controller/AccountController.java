@@ -69,10 +69,10 @@ public class AccountController {
 
 	}
 
-	@RequestMapping(value = "/accounts", method = RequestMethod.GET)
+	@RequestMapping(value = {"/accounts/user/{name}", "/accounts/user/{name}/{type}"}, method = RequestMethod.GET)
 	public ResponseEntity<List<Account>> findAccounts(
-			@RequestParam(value = "name") final String id,
-			@RequestParam(value = "type", required = false) final String type) {
+			@PathVariable(value = "name") final String id,
+			@PathVariable(value = "type", required = false) final String type) {
 
 		logger.info("AccountController.findAccount: id=" + id);
 		if (type == null) {

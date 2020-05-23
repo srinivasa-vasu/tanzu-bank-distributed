@@ -1,13 +1,7 @@
 resources:
-- deploy/00-config-props.yaml
-- deploy/00-ds-props.yaml
-- deploy/01-registry-secret.yaml
-- deploy/02-sa.yaml
-- deploy/02-sa-role.yaml
-- deploy/97-crossplane.yaml
-- deploy/97-gateway.yaml
-- deploy/97-accounts.yaml
-- deploy/97-portfolio.yaml
-- deploy/97-quotes.yaml
-- deploy/97-user.yaml
-- deploy/97-web.yaml
+- ../../../apac/k8s/base
+- 97-gateway.yaml
+patchesStrategicMerge:
+- 00-config-props.yaml
+- 00-ds-props.yaml
+- 01-registry-secret.yaml

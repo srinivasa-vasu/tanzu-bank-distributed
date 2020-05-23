@@ -1,8 +1,10 @@
 resources:
-- deploy/00-config-props.yaml
-- deploy/01-registry-secret.yaml
-- deploy/02-sa.yaml
-- deploy/02-sa-role.yaml
-- deploy/03-trader-db.yaml
-- deploy/96-config.yaml
-- deploy/97-gateway.yaml
+- ../../../apac/k8s/base-regional
+- 03-trader-db.yaml
+- 96-config.yaml
+- 97-gateway.yaml
+patchesStrategicMerge:
+- 00-config-props.yaml
+- 01-registry-secret.yaml
+#- 02-sa.yaml
+#- 02-sa-role.yaml

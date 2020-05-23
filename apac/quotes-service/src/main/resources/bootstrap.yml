@@ -3,4 +3,4 @@ spring:
      name: quotes-service
   cloud:
     config:
-      uri: http://crossplane-service
+      uri: ${CROSSPLANE_EP}

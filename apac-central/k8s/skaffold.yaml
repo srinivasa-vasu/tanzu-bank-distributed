@@ -3,31 +3,31 @@ kind: Config
 build:
   artifacts:
     - image: crossplane
-      context: ../crossplane-service
+      context: ../../apac/crossplane-service
       buildpack:
         builder: humourmind/paketo-java-builder-tiny:0.7.3
     - image: gateway
-      context: ../gateway-service
+      context: ../../apac/gateway-service
       buildpack:
         builder: humourmind/paketo-java-builder-tiny:0.7.3
     - image: portfolio
-      context: ../portfolio-service
+      context: ../../apac/portfolio-service
       buildpack:
         builder: humourmind/paketo-java-builder-tiny:0.7.3
     - image: accounts
-      context: ../accounts-service
+      context: ../../apac/accounts-service
       buildpack:
         builder: humourmind/paketo-java-builder-tiny:0.7.3
     - image: quotes
-      context: ../quotes-service
+      context: ../../apac/quotes-service
       buildpack:
         builder: humourmind/paketo-java-builder-tiny:0.7.3
     - image: user
-      context: ../user-service
+      context: ../../apac/user-service
       buildpack:
         builder: humourmind/paketo-java-builder-tiny:0.7.3
     - image: web
-      context: ../web-ui
+      context: ../../apac/web-ui
       buildpack:
         builder: humourmind/paketo-java-builder-tiny:0.7.3
   tagPolicy:

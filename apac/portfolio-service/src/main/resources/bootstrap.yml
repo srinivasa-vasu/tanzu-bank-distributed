@@ -4,7 +4,7 @@ spring:
      name: portfolio-service
   cloud:
     config:
-      uri: http://crossplane-service
+      uri: ${CROSSPLANE_EP}
 info:
   build:
     group: ${group}

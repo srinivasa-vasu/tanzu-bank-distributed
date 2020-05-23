@@ -1,5 +1,6 @@
 package io.pivotal.web.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
+import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -44,8 +47,7 @@ public class AccountService {
 //	 @HystrixCommand(fallbackMethod = "getAccountsFallback")
 	public List<Account> getAccounts(String user) {
 		logger.debug("Looking for account with userId: " + user);
-		
-	    Account[] accounts = restTemplate.getForObject(downstreamProtocol + "://" + accountsService + "/accounts?name={user}", Account[].class, user);
+	    Account[] accounts = restTemplate.getForObject(downstreamProtocol + "://" + accountsService + "/accounts/user/{user}", Account[].class, user);
 	    
 	    return Arrays.asList(accounts);
 	}
@@ -58,7 +60,7 @@ public class AccountService {
 	public List<Account> getAccountsByType(String user, String type) {
 		logger.debug("Looking for account with userId: " + user + " and type: " + type);
 		
-	    Account[] accounts = restTemplate.getForObject(downstreamProtocol + "://" + accountsService + "/accounts?name={user},type={type}", Account[].class, user,type);
+	    Account[] accounts = restTemplate.getForObject(downstreamProtocol + "://" + accountsService + "/accounts/user/{user}/{type}", Account[].class, user,type);
 
 	    return Arrays.asList(accounts);
 	}
