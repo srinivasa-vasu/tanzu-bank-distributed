@@ -1,0 +1,25 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "quotes"
+spec:
+  template:
+    spec:
+      initContainers:
+      - name: init-config-check
+        image: busybox:latest
+        command:
+        - '/bin/sh'
+        - '-c'
+        - |
+          while true
+          do
+            rt=$(nc -z -w 1 gateway-service 80)
+            if [ $? -eq 0 ]; then
+              echo "Gateway service is UP"
+              break
+            fi
+            echo "Gateway service is not yet reachable;sleep for 5s before retry"
+            sleep 5
+          done      

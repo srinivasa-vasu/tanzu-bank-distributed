@@ -1,0 +1,7 @@
+resources:
+- ../../../apac/k8s/base
+- 97-gateway.yaml
+patchesStrategicMerge:
+- 00-config-props.yaml
+- 00-ds-props.yaml
+- 01-registry-secret.yaml

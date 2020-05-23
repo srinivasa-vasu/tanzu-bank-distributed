@@ -1,0 +1,44 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "accounts"
+spec:
+  template:
+    spec:
+      initContainers:
+      - name: init-ds-check
+        image: busybox:latest
+        envFrom:
+        - configMapRef: 
+            name: ds-props
+        command:
+        - '/bin/sh'
+        - '-c'
+        - |
+          while true
+          do
+            rt=$(nc -z -w 1 $host $port)
+            if [ $? -eq 0 ]; then
+              echo "DB is UP"
+              break
+            fi
+            echo "DB is not yet reachable;sleep for 5s before retry"
+            sleep 5
+          done   
+      - name: init-config-check
+        image: busybox:latest
+        command:
+        - '/bin/sh'
+        - '-c'
+        - |
+          while true
+          do
+            rt=$(nc -z -w 1 gateway-service 80)
+            if [ $? -eq 0 ]; then
+              echo "Gateway service is UP"
+              break
+            fi
+            echo "Gateway service is not yet reachable;sleep for 5s before retry"
+            sleep 5
+          done

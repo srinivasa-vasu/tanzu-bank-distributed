@@ -1,0 +1,80 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: sm-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: sm-vs
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - sm-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: web-service
+            port:
+              number: 80
+#    - match:
+#        - uri:
+#            prefix: /accounts/**
+#        - uri:
+#            prefix: /user/**
+#        - uri:
+#            prefix: /portfolio/**
+#        - uri:
+#            prefix: /logout/**
+#        - uri:
+#            prefix: /login/**
+#      route:
+#        - destination:
+#            host: ac-gateway-service
+#            port:
+#              number: 80
+---
+#apiVersion: networking.istio.io/v1alpha3
+#kind: Sidecar
+#metadata:
+#  name: sm-sc
+#spec:
+#  workloadSelector:
+#    labels:
+#      app: "gateway"
+#      kind: "k8s-native"
+#      version: "1.0"
+##  ingress:
+##    - port:
+##        number: 443
+##        protocol: HTTP
+##        name: http443
+##      defaultEndpoint: 127.0.0.1:8080
+##    - port:
+##        number: 80
+##        protocol: HTTP
+##        name: http80
+##      defaultEndpoint: 127.0.0.1:8080
+##    - port:
+##        number: 8080
+##        protocol: HTTP
+##        name: http8080
+##      defaultEndpoint: 127.0.0.1:8080
+##      captureMode: NONE # not needed if metadata is set for entire proxy
+#  egress:
+#  - hosts:
+#    - "*/*"

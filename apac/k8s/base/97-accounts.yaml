@@ -3,66 +3,30 @@ apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
   labels:
-    app: "user"
+    app: "accounts"
     kind: "k8s-native"
     version: "1.0"
     rel: ds
-  name: "user"
+  name: "accounts"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "user"
+      app: "accounts"
       kind: "k8s-native"
       version: "1.0"
       rel: ds
   template:
     metadata:
       labels:
-        app: "user"
+        app: "accounts"
         kind: "k8s-native"
         version: "1.0"
         rel: ds
     spec:
       serviceAccountName: boot-sa
-      initContainers:
-      - name: init-ds-check
-        image: busybox:latest
-        envFrom:
-        - configMapRef: 
-            name: ds-props
-        command:
-        - '/bin/sh'
-        - '-c'
-        - |
-          while true
-          do
-            rt=$(nc -z -w 1 $host $port)
-            if [ $? -eq 0 ]; then
-              echo "DB is UP"
-              break
-            fi
-            echo "DB is not yet reachable;sleep for 5s before retry"
-            sleep 5
-          done   
-      - name: init-config-check
-        image: busybox:latest
-        command:
-        - '/bin/sh'
-        - '-c'
-        - |
-          while true
-          do
-            rt=$(nc -z -w 1 gateway-service 80)
-            if [ $? -eq 0 ]; then
-              echo "Gateway service is UP"
-              break
-            fi
-            echo "Gateway service is not yet reachable;sleep for 5s before retry"
-            sleep 5
-          done      
       containers:
-      - name: "user"
+      - name: "accounts"
         lifecycle:
           preStop:
             exec:
@@ -72,7 +36,7 @@ spec:
             name: config-props
         - configMapRef: 
             name: ds-props
-        image: "harbor.sys.humourmind.com/tanzumc/user:1.0"
+        image: "harbor.sys.humourmind.com/tanzumc/accounts:1.0"
         imagePullPolicy: "Always"
         readinessProbe:
           failureThreshold: 3
@@ -103,15 +67,15 @@ apiVersion: "v1"
 kind: "Service"
 metadata:
   labels:
-    app: "user-service"
+    app: "accounts-service"
     version: "1.0"
-  name: "user-service"
+  name: "accounts-service"
 spec:
   ports:
   - name: "web"
     port: 80
     targetPort: 8080
   selector:
-    app: "user"
+    app: "accounts"
     version: "1.0"
   type: "ClusterIP"          

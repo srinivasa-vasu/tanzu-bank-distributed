@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ds-props
+data:
+  SPRING_DATASOURCE_URL: <<tbd>>
+  SPRING_DATASOURCE_USERNAME: <<tbd>>
+  host: <<tbd>>
+  port: <<tbd>>

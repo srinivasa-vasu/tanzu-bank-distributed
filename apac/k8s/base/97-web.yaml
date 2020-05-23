@@ -3,27 +3,27 @@ apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
   labels:
-    app: "crossplane"
+    app: "web"
     kind: "k8s-native"
     version: "1.0"
-  name: "crossplane"
+  name: "web"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "crossplane"
+      app: "web"
       kind: "k8s-native"
       version: "1.0"
   template:
     metadata:
       labels:
-        app: "crossplane"
+        app: "web"
         kind: "k8s-native"
         version: "1.0"
     spec:
       serviceAccountName: boot-sa
       containers:
-      - name: "crossplane"
+      - name: "web"
         lifecycle:
           preStop:
             exec:
@@ -31,7 +31,7 @@ spec:
         envFrom:
         - configMapRef: 
             name: config-props
-        image: "harbor.sys.humourmind.com/tanzumc/crossplane-ac:1.0"
+        image: "harbor.sys.humourmind.com/tanzumc/web:1.0"
         imagePullPolicy: "Always"
         readinessProbe:
           failureThreshold: 3
@@ -62,15 +62,14 @@ apiVersion: "v1"
 kind: "Service"
 metadata:
   labels:
-    app: "crossplane-service"
+    app: "web-service"
     version: "1.0"
-  name: "crossplane-service"
+  name: "web-service"
 spec:
   ports:
   - name: "web"
     port: 80
     targetPort: 8080
   selector:
-    app: "crossplane"
+    app: "web"
     version: "1.0"
-  type: "ClusterIP"          

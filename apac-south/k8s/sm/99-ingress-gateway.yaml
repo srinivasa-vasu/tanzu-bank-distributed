@@ -1,0 +1,49 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: sm-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: sm-vs
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - sm-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: web-service
+            port:
+              number: 80
+#    - match:
+#        - uri:
+#            prefix: /accounts/**
+#        - uri:
+#            prefix: /user/**
+#        - uri:
+#            prefix: /portfolio/**
+#        - uri:
+#            prefix: /logout/**
+#        - uri:
+#            prefix: /login/**
+#      route:
+#        - destination:
+#            host: as-gateway-service
+#            port:
+#              number: 80

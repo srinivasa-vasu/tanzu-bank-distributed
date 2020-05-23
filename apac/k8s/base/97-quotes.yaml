@@ -3,44 +3,27 @@ apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
   labels:
-    app: "web"
+    app: "quotes"
     kind: "k8s-native"
     version: "1.0"
-  name: "web"
+  name: "quotes"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "web"
+      app: "quotes"
       kind: "k8s-native"
       version: "1.0"
   template:
     metadata:
       labels:
-        app: "web"
+        app: "quotes"
         kind: "k8s-native"
         version: "1.0"
     spec:
       serviceAccountName: boot-sa
-      initContainers:
-      - name: init-config-check
-        image: busybox:latest
-        command:
-        - '/bin/sh'
-        - '-c'
-        - |
-          while true
-          do
-            rt=$(nc -z -w 1 gateway-service 80)
-            if [ $? -eq 0 ]; then
-              echo "Gateway service is UP"
-              break
-            fi
-            echo "Gateway service is not yet reachable;sleep for 5s before retry"
-            sleep 5
-          done      
       containers:
-      - name: "web"
+      - name: "quotes"
         lifecycle:
           preStop:
             exec:
@@ -48,7 +31,7 @@ spec:
         envFrom:
         - configMapRef: 
             name: config-props
-        image: "harbor.sys.humourmind.com/tanzumc/web:1.0"
+        image: "harbor.sys.humourmind.com/tanzumc/quotes:1.0"
         imagePullPolicy: "Always"
         readinessProbe:
           failureThreshold: 3
@@ -79,17 +62,15 @@ apiVersion: "v1"
 kind: "Service"
 metadata:
   labels:
-    app: "web-service"
+    app: "quotes-service"
     version: "1.0"
-  name: "web-service"
+  name: "quotes-service"
 spec:
   ports:
   - name: "web"
     port: 80
     targetPort: 8080
-    nodePort: 32001
   selector:
-    app: "web"
+    app: "quotes"
     version: "1.0"
-  type: "LoadBalancer"
-  loadBalancerIP: 10.195.9.189
+  type: "ClusterIP"          

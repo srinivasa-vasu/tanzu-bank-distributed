@@ -1,0 +1,81 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  labels:
+    app: "portfolio"
+    kind: "k8s-native"
+    version: "1.0"
+    rel: ds
+  name: "portfolio"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "portfolio"
+      kind: "k8s-native"
+      version: "1.0"
+      rel: ds
+  template:
+    metadata:
+      labels:
+        app: "portfolio"
+        kind: "k8s-native"
+        version: "1.0"
+        rel: ds
+    spec:
+      serviceAccountName: boot-sa
+      containers:
+      - name: "portfolio"
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/bash", "-c", "sleep 10"]
+        envFrom:
+        - configMapRef: 
+            name: config-props
+        - configMapRef: 
+            name: ds-props
+        image: "harbor.sys.humourmind.com/tanzumc/portfolio:1.0"
+        imagePullPolicy: "Always"
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: "/actuator/health/readiness"
+            port: 8080
+            scheme: "HTTP"
+          initialDelaySeconds: 0
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: "/actuator/health/liveness"
+            port: 8080
+            scheme: "HTTP"
+          initialDelaySeconds: 0
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        ports:
+        - containerPort: 8080
+          name: "web"
+          protocol: "TCP"
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  labels:
+    app: "portfolio-service"
+    version: "1.0"
+  name: "portfolio-service"
+spec:
+  ports:
+  - name: "web"
+    port: 80
+    targetPort: 8080
+  selector:
+    app: "portfolio"
+    version: "1.0"
+  type: "ClusterIP"          

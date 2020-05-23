@@ -1,0 +1,44 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "gateway"
+spec:
+  template:
+    spec:
+      initContainers:
+      - name: init-config-check
+        image: busybox:latest
+        command:
+        - '/bin/sh'
+        - '-c'
+        - |
+          while true
+          do
+            rt=$(nc -z -w 1 crossplane-service 80)
+            if [ $? -eq 0 ]; then
+              echo "Crossplane service is UP"
+              break
+            fi
+            echo "Crossplane service is not yet reachable;sleep for 5s before retry"
+            sleep 5
+          done      
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  labels:
+    app: "gateway-service"
+    version: "1.0"
+  name: "gateway-service"
+spec:
+  ports:
+  - name: "web"
+    port: 80
+    targetPort: 8080
+    nodePort: 32000
+  selector:
+    app: "gateway"
+    version: "1.0"
+  type: LoadBalancer
+  loadBalancerIP: 10.195.9.180

@@ -1,0 +1,10 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "user"
+spec:
+  template:
+    metadata:
+      annotations:
+        traffic.sidecar.istio.io/excludeOutboundIPRanges: 10.195.9.82/32

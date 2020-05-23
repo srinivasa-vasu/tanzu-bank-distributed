@@ -1,0 +1,11 @@
+resources:
+- ../base
+- 99-ingress-gateway.yaml
+patchesStrategicMerge:
+- 00-config-props.yaml
+- 97-gateway.yaml
+- 97-accounts.yaml
+- 97-portfolio.yaml
+- 97-quotes.yaml
+- 97-user.yaml
+- 97-web.yaml
