@@ -47,8 +47,10 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-kubernetes-discovery:2.0.0.M1'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j:1.0.0.RELEASE'
-	implementation "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
+//	implementation "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+	implementation group: 'io.github.resilience4j', name: 'resilience4j-reactor', version: '1.4.0'
 
 }
 

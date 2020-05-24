@@ -18,7 +18,7 @@ public class ErrorCodeToExceptionFilterFactory
 		implements Ordered {
 
 	private final Logger logger = LoggerFactory
-			.getLogger(FallbackPathGatewayFilterFactory.class);
+			.getLogger(ErrorCodeToExceptionFilterFactory.class);
 
 	public ErrorCodeToExceptionFilterFactory() {
 		super(ErrorCodeToExceptionFilterFactory.Config.class);
