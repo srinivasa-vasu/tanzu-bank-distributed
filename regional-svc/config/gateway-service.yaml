@@ -38,6 +38,7 @@ spring:
             responseStatusCodeSeries:
               - CLIENT_ERROR
               - SERVER_ERROR
+            clearResponseHeader: "true"
       - id: user-service
         uri: ${USER_EP}
         predicates:
