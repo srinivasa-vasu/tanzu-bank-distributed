@@ -32,7 +32,12 @@ spring:
           args:
             name: svc-fallback
             fallbackUri: forward:/fallback
-        - name: SMErrorCodeToException
+        - name: ErrorStatusCodeToException
+          args:
+            name: MeshErrorCodeToException
+            responseStatusCodeSeries:
+              - CLIENT_ERROR
+              - SERVER_ERROR
       - id: user-service
         uri: ${USER_EP}
         predicates:
